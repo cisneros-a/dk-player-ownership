@@ -1,6 +1,6 @@
 import csv
 
-def find_all_player_ownership(file):
+def find_contest_player_ownership(file):
 
     with open(file, 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
@@ -22,8 +22,9 @@ def create_list_of_players(csv_file):
             roster = line[5]
             split = roster.split()
             player_name = ""
+            positions = ["QB", "RB", "WR", "TE", "FLEX", "DST"]
             for x in range(len(split)):
-                if x % 3 == 0:
+                if split[x] in positions:
                     players.append(player_name.rstrip())
                     player_name = ""
                 else:
@@ -43,9 +44,11 @@ def get_player_frequency(players_list):
     
 def find_ownership_percentages(player_frequency, total_rosters):
     for player in player_frequency:
-            
-            player_frequency[player] = round(player_frequency[player] / total_rosters, 2)
-            print(f'{player}: {player_frequency[player]}%')
+            if round(player_frequency[player] / total_rosters, 2) > 0.01:
+                player_frequency[player] = round(player_frequency[player] / total_rosters, 2)
+                print(f'{player}: {player_frequency[player]}%')
 
 
-find_all_player_ownership('three-man-contest.csv')
+find_contest_player_ownership('600K-wk10-2020.csv')
+
+
