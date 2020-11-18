@@ -78,6 +78,37 @@ def find_ownership_percentages(player_frequency, total_rosters):
                 print(f'{player}: {player_frequency[player]}%')
 
 
+  def determine_net_payout(file, username, entry_cost, payout_structure):
+    with open(file, 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        # this skips the first line of the file
+        next(csv_reader)
+        total_lineups = 0
+        profitting_lineups = 0
+        total_payout = 0
+        for line in csv_reader:
+            if line[2].split(' ')[0] == username:
+                total_lineups += 1
+                payout = find_payout(int(line[0]), payout_structure)
+                total_payout += payout
+                if payout != 0:
+                    profitting_lineups +=1
+        buy_in = entry_cost * total_lineups 
+   
+        print(f"{username}'s earnings: " )
+        print(f' Net: ${total_payout - buy_in} \n Buy in: ${buy_in} \n Payout: ${total_payout} ')
+        print(f' Cashed on {profitting_lineups} out of {total_lineups} lineups')
+        
+
+def find_payout(ranking, payouts):
+    for i in range(len(payouts)):
+        if ranking == payouts[i][0]:
+            return int(payouts[i][1])
+        elif ranking > payouts[len(payouts)-1][0]:
+            return 0
+        elif ranking > payouts[i][0] and ranking < payouts[i +1][0]:
+            return int(payouts[i + 1][1])
+
 
 
 #find_contest_player_ownership('600K-wk10-2020.csv', "username")
